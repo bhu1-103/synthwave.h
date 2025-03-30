@@ -68,7 +68,7 @@ int main(int argc, char** argv) {
             return 1;
         }
         float x = atof(argv[i + 0]);
-		char wlan_code = argv[i + 1][0];
+        char wlan_code = argv[i + 1][0];
         float y = atof(argv[i + 2]);
         float z = atof(argv[i + 3]);
         float w = atof(argv[i + 4]);
