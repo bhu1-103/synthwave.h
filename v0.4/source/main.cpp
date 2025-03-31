@@ -19,31 +19,42 @@ std::vector<float> points;
 std::vector<char> wlan_codes;
 
 void initOpenGL() {
-    glClearColor(0.2f, 0.0f, 0.2f, 1.0f); // Deep dark purple background
+    //glClearColor(0.2f, 0.0f, 0.2f, 1.0f); // Deep dark purple background
+    glClearColor(0.1f,0.1f,0.45f,1.0f);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    //glEnable(GL_BLEND);
+    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     gluPerspective(45.0f, screenWidth / screenHeight, 1.0f, 50.0f);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
+
     gluLookAt(povX, povY, 6.0f + povZ, // Eye position
               4.0f, 3.0f, 0.0f,      // Center position
               0.0f, 1.0f, 0.0f);     // Up direction
 
     // Begin drawing
+    glDisable(GL_BLEND);
     draw_grid();
     draw_axes();
-	draw_box(room_length, room_breadth, room_height);
+    draw_box(room_length, room_breadth, room_height);
+
+    glEnable(GL_BLEND);
+    glDepthMask(GL_FALSE);
 
     for (size_t i = 0; i < points.size(); i += 4) {
         draw_point(points[i], points[i+1] / 10.0f, points[i+2] / 10.0f, points[i+3] / 10.0f, wlan_codes[i/4]);
     }
-	
+    glDepthMask(GL_TRUE);
     glutSwapBuffers();
 }
 
@@ -76,7 +87,7 @@ int main(int argc, char** argv) {
         points.push_back(y);
         points.push_back(z);
         points.push_back(w);
-		wlan_codes.push_back(wlan_code);
+    wlan_codes.push_back(wlan_code);
     }
 
     glutInit(&argc, argv);
